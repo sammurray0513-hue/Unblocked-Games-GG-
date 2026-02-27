@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en-US" data-theme="dark">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Hollow Knight</title>
+    <meta name="description" content="Dive into Hollow Knight, where every step unveils secrets, every battle sharpens your skill, and every victory brings Hallownest’s mysteries closer.">
+    <meta name="keywords" content="hollow knight">
+    <meta name="title" content="Hollow Knight">
+    <meta property="fb:app_id" content="">
+    <meta property="og:title" content="Hollow Knight">
+    <meta property="og:site_name" content="Geometry Dash">
+    <link rel="image_src" href="https://geometry-games.io/data/image/game/hollow-knight/hollow-knight.png">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://geometry-games.io/hollow-knight">
+    <meta property="og:description" content="Dive into Hollow Knight, where every step unveils secrets, every battle sharpens your skill, and every victory brings Hallownest’s mysteries closer.">
+    <meta property="og:image" content="https://geometry-games.io/data/image/game/hollow-knight/hollow-knight.png">
+    <meta name="robots" content="index,follow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimal-ui, shrink-to-fit=no viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Geometry Dash">
+    <meta name="HandheldFriendly" content="true">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="shortcut icon" sizes="512x512" href="https://geometry-games.io/cache/data/image/options/favicon-s512x512.png">
+    <link rel="icon" type="image/x-icon" href="https://geometry-games.io/favicon.ico?v=3">
+    <link rel="apple-touch-icon" href="https://geometry-games.io/cache/data/image/options/favicon-s512x512.png">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <link rel="canonical" href="https://geometry-games.io/hollow-knight" data-react-helmet="true">
+    <!-- Google tag (gtag.js) -->
+    <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-Y09K446ERV"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-Y09K446ERV');
+    </script>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background: #231F20;
+        }
+
+        #unity-container {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        #loading-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 24px;
+            font-family: 'Inter', sans-serif;
+            text-align: center;
+            z-index: 10;
+        }
+    </style>
+    <script>
+        var root_dir = 'https://play.2games.io/game/hollow-knight/';
+    </script>
+</head>
+
+<body>
+    <div id="loading-text">INITIALIZING...</div>
+    <div hidden id="unity-container" class="unity-desktop">
+        <canvas id="unity-canvas"></canvas>
+        <div id="unity-loading-bar">
+            <div id="unity-logo"></div>
+            <div id="unity-progress-bar-empty">
+                <div id="unity-progress-bar-full"></div>
+            </div>
+        </div>
+        <div id="unity-mobile-warning"> WebGL builds are not supported on mobile devices. </div>
+    </div>
+    <script>
+        var loadingText = document.querySelector("#loading-text");
+        let totalBytes = 0;
+        let loadedBytes = 0;
+        
+        async function getSize(url) {
+            try {
+                const res = await fetch(url, {
+                    method: "HEAD"
+                });
+                return parseInt(res.headers.get("Content-Length") || "0", 10);
+            } catch {
+                return 0;
+            }
+        }
+        
+        async function fetchWithProgress(url) {
+            const response = await fetch(url);
+            const reader = response.body.getReader();
+            let chunks = [];
+            let received = 0;
+            while (true) {
+                const {
+                    done,
+                    value
+                } = await reader.read();
+                if (done) break;
+                received += value.length;
+                loadedBytes += value.length;
+                chunks.push(value);
+                let mbDone = (loadedBytes / (1024 * 1024)).toFixed(2);
+                let mbTotal = '909.17';
+                loadingText.textContent = `LOADING... ${mbDone} MB / ${mbTotal} MB`;
+            }
+            let fullBuffer = new Uint8Array(received);
+            let offset = 0;
+            for (let chunk of chunks) {
+                fullBuffer.set(chunk, offset);
+                offset += chunk.length;
+            }
+            return fullBuffer.buffer;
+        }
+        
+        async function mergeFiles(fileParts) {
+            const buffers = await Promise.all(fileParts.map(part => fetchWithProgress(part)));
+            const mergedBlob = new Blob(buffers);
+            return URL.createObjectURL(mergedBlob);
+        }
+
+        function getParts(file, start, end) {
+            let parts = [];
+            for (let i = start; i <= end; i++) {
+                parts.push(file + ".part" + i);
+            }
+            return parts;
+        }
+        
+        (async () => {
+            try {
+                const allParts = [...getParts(root_dir+"Build/bog.data", 1, 44), ...getParts(root_dir+"Build/bog.wasm", 1, 2)];
+                const sizes = await Promise.all(allParts.map(getSize));
+                totalBytes = sizes.reduce((a, b) => a + b, 0);
+                
+                const [dataUrl, wasmurl] = await Promise.all([
+                    mergeFiles(getParts(root_dir+"Build/bog.data", 1, 44)),
+                    mergeFiles(getParts(root_dir+"Build/bog.wasm", 1, 2)),
+                ]);
+                
+                var buildUrl = root_dir+"Build";
+                var loaderUrl = buildUrl + "/bog.loader.js";
+                var config = {
+                    dataUrl: dataUrl,
+                    frameworkUrl: buildUrl + "/bog.framework.js",
+                    codeUrl: wasmurl,
+                    streamingAssetsUrl: "StreamingAssets",
+                    companyName: "Team Cherry & Truffled",
+                    productName: "Hollow Knight",
+                    productVersion: "1.0",
+                };
+                
+                var container = document.querySelector("#unity-container");
+                container.hidden = false;
+                var canvas = document.querySelector("#unity-canvas");
+                
+                function resizeCanvas() {
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                    canvas.style.width = window.innerWidth + "px";
+                    canvas.style.height = window.innerHeight + "px";
+                }
+                resizeCanvas();
+                window.addEventListener('resize', resizeCanvas);
+                
+                var script = document.createElement("script");
+                script.src = loaderUrl;
+                script.onload = () => {
+                    createUnityInstance(canvas, config, (progress) => {
+                        // Progress handling if needed
+                    }).then((unityInstance) => {
+                        loadingText.remove();
+                        canvas.style.display = "block";
+                    }).catch((message) => {
+                        console.error(message);
+                    });
+                };
+                document.body.appendChild(script);
+            } catch (e) {
+                loadingText.textContent = "Error loading game: " + e.message;
+                console.error(e);
+            }
+        })();
+    </script>
+</body>
+</html>

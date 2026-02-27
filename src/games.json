@@ -1,0 +1,27 @@
+[
+  {
+    "id": "slope",
+    "title": "Slope",
+    "url": "/slope.html",
+    "thumbnail": "https://picsum.photos/seed/slope/400/300",
+    "category": "Action",
+    "trending": true
+  },
+  {
+    "id": "hollow-knight",
+    "title": "Hollow Knight",
+    "url": "/hollow-knight.html",
+    "thumbnail": "https://picsum.photos/seed/hollow/400/300",
+    "category": "Adventure",
+    "trending": false
+  },
+  {
+    "id": "roblox",
+    "title": "Roblox",
+    "url": "/roblox.html",
+    "thumbnail": "https://picsum.photos/seed/roblox/400/300",
+    "category": "Social",
+    "trending": true,
+    "fixing": true
+  }
+]

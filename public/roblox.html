@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Study.com | Reader</title>
+    <link rel="icon" href="/stuff/logo.png">
+    <link rel="stylesheet" href="/stuff/css/styles.css">
+    <link rel="stylesheet" href="/stuff/css/alert.css">
+    <script src="/stuff/js/loading.js"></script>
+    <script src="/stuff/js/settings.js"></script>
+    <script src="/stuff/js/moresettings.js"></script>
+    <script src="/stuff/js/alert.js"></script>
+    <script src="/stuff/js/messages.js"></script>
+    <meta property="og:title" content="IXL | Math, Language Arts, Science, Social Studies, and Spanish">
+    <meta property="og:site_name" content="IXL Learning">
+    <meta name="theme-color" content="#00ffa6">
+    <meta name="msapplication-TileColor" content="#00ffa6">
+    <meta property="og:image" content="/stuff/logo.png">
+    <meta name="description" content="IXL is the world's most popular subscription-based learning site for K–12. Used by over 17 million students, IXL provides personalized learning in more than 17,000 topics, covering math, language arts, science, social studies, and Spanish. Interactive questions, awards, and certificates keep kids motivated as they master skills.">
+    <meta property="og:description" content="IXL is the world's most popular subscription-based learning site for K–12. Used by over 17 million students, IXL provides personalized learning in more than 17,000 topics, covering math, language arts, science, social studies, and Spanish. Interactive questions, awards, and certificates keep kids motivated as they master skills.">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-JMXEZ1F6QH"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-JMXEZ1F6QH');
+    </script>
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; overflow: hidden; background: #111; color: white; font-family: sans-serif; }
+        #header { height: 50px; background: #222; display: flex; align-items: center; padding: 0 15px; justify-content: space-between; }
+        .headericons { height: 30px; cursor: pointer; margin: 0 10px; }
+        #frameframeframe { width: 100%; height: calc(100% - 100px); border: none; }
+        #footer { height: 50px; background: #222; display: flex; align-items: center; padding: 0 15px; justify-content: space-between; position: absolute; bottom: 0; width: 100%; box-sizing: border-box; }
+        #loading-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #111; z-index: 10000; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: opacity 0.5s; }
+        .fade-out { opacity: 0; pointer-events: none; }
+        .spinner { border: 4px solid rgba(255,255,255,0.1); border-left-color: #00ffa6; border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div id="loading-screen">
+        <div class="spinner"></div>
+        <h1 id="messageforyou" style="font-size: 18px; margin-top: 20px;">please join the backup discord server! https://discord.gg/WcZjQK3Vrh</h1>
+        <div id="dabottom">
+            <h1><a onclick="loadthething()" style="cursor:pointer; font-size: 16px; color: #00ffa6;">skip loading</a></h1>
+        </div>
+    </div>
+
+    <div id="header">
+        <img class="headericons" src="https://picsum.photos/30/30" onclick="window.location.href='/';">
+        <div class="right">
+            <span>Study.com Reader</span>
+        </div>
+    </div>
+
+    <div id="roddyricchboxselect" style="height: 100%;">
+        <iframe id="frameframeframe" sandbox="allow-scripts allow-pointer-lock allow-forms allow-same-origin allow-downloads" allowfullscreen="true" src="/embed.html#https://nowgg.fun/apps/a/19900/b.html" frameborder="0"></iframe>
+    </div>
+
+    <div id="footer">
+        <p id="online">online users: 1208</p>
+        <div class="right">
+            <button onclick="var f = document.getElementById('frameframeframe'); f.src = f.src;" style="background:none; border:1px solid #555; color:white; cursor:pointer; padding:5px 10px; border-radius:5px;">Reload</button>
+        </div>
+    </div>
+
+    <script>
+        function loadthething(){
+            document.getElementById('loading-screen').classList.add('fade-out');
+        }
+        setTimeout(loadthething, 2000);
+
+        function query(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        const iframe = document.getElementById("frameframeframe");
+        const urlParam = query("url");
+        if (urlParam) {
+            sessionStorage.setItem("proxyurl", urlParam);
+            iframe.src = "/embed.html#" + urlParam;
+            const url = new URL(window.location);
+            url.searchParams.delete('url');
+            window.history.replaceState({}, '', url);
+        } else if (sessionStorage.getItem("proxyurl")) {
+            iframe.src = "/embed.html#" + sessionStorage.getItem("proxyurl");
+        }
+    </script>
+</body>
+</html>
